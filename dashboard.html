@@ -10,6 +10,7 @@
             --primary: #2563eb;
             --bg: #f8fafc;
             --border: #e2e8f0;
+            --text-muted: #64748b;
         }
 
         body {
@@ -37,7 +38,7 @@
             align-items: center;
             justify-content: center;
         }
-        /* Smaller version of medical cross */
+        
         .cross-small { background: white; width: 14px; height: 4px; border-radius: 1px; position: relative; }
         .cross-small::after { content:""; position: absolute; background: white; width: 4px; height: 14px; left: 5px; top: -5px; border-radius: 1px; }
 
@@ -80,12 +81,31 @@
             margin-bottom: 12px;
         }
 
+        /* --- NEW CSS DOCUMENT ICON --- */
+        .doc-icon {
+            width: 20px;
+            height: 26px;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            position: relative;
+            margin-right: 20px;
+        }
+        .doc-icon::before {
+            content: "";
+            position: absolute;
+            top: 6px; left: 4px;
+            width: 8px; height: 2px;
+            background: #cbd5e1;
+            box-shadow: 0 4px 0 #cbd5e1, 0 8px 0 #cbd5e1;
+        }
+
         .badge {
             padding: 6px 12px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             margin-left: auto;
+            letter-spacing: 0.05em;
         }
         .completed { background: #dcfce7; color: #166534; }
         .draft { background: #fef3c7; color: #92400e; }
@@ -98,7 +118,7 @@
             <div class="mini-logo"><div class="cross-small"></div></div>
             <div>
                 <div style="font-weight: 800; font-size: 18px;">SumData AI</div>
-                <div style="font-size: 12px; color: #64748b;">Dr. Anderson</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Dr. Anderson</div>
             </div>
         </div>
         <div class="profile-circle">A</div>
@@ -108,29 +128,29 @@
         <div class="upload-box">
             <div>
                 <div style="font-weight: 600; font-size: 16px;">Upload Template PDF</div>
-                <div style="color: #64748b; font-size: 14px;">Fill medical forms automatically</div>
+                <div style="color: var(--text-muted); font-size: 14px;">Fill medical forms automatically</div>
             </div>
-            <button style="background: white; border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">Choose File</button>
+            <button style="background: white; border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--primary);">Choose File</button>
         </div>
 
         <button class="btn-visit">+ Start New Patient Visit</button>
 
-        <h3 style="margin-bottom: 20px;">Recent Documentation</h3>
+        <h3 style="margin-bottom: 20px; font-size: 18px; font-weight: 700;">Recent Documentation</h3>
 
         <div class="visit-card">
-            <div style="margin-right: 15px; font-size: 24px;">📄</div>
+            <div class="doc-icon"></div>
             <div>
                 <div style="font-weight: 600;">John Smith</div>
-                <div style="font-size: 13px; color: #64748b;">Jan 24, 2026 • 10:30 AM</div>
+                <div style="font-size: 13px; color: var(--text-muted);">Jan 24, 2026 • 10:30 AM</div>
             </div>
             <span class="badge completed">COMPLETED</span>
         </div>
 
         <div class="visit-card">
-            <div style="margin-right: 15px; font-size: 24px;">📄</div>
+            <div class="doc-icon"></div>
             <div>
                 <div style="font-weight: 600;">Michael Brown</div>
-                <div style="font-size: 13px; color: #64748b;">Jan 23, 2026 • 11:00 AM</div>
+                <div style="font-size: 13px; color: var(--text-muted);">Jan 23, 2026 • 11:00 AM</div>
             </div>
             <span class="badge draft">DRAFT</span>
         </div>
