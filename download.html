@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Generated Summaries</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .transcript-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transcript-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transcript-icon {
+            color: #999;
+        }
+
+        .transcript-text h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .transcript-text p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .edit-btn {
+            background: white;
+            border: 1px solid #0066ff;
+            color: #0066ff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .edit-btn:hover {
+            background: #f0f7ff;
+        }
+
+        .regenerate-btn {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .regenerate-btn:hover {
+            background: #fafafa;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 20px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #f0f7ff;
+            color: #0066ff;
+            font-weight: 500;
+        }
+
+        .tab:hover:not(.active) {
+            background: #fafafa;
+        }
+
+        .summary-content {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            min-height: 500px;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-title h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .summary-title p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .summary-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .icon-btn:hover {
+            background: #fafafa;
+        }
+
+        .summary-body {
+            display: none;
+        }
+
+        .summary-body.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .section p, .section ul {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section li {
+            margin-bottom: 6px;
+            padding-left: 0;
+        }
+
+        .download-btn {
+            background: #0066ff;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            background: #0052cc;
+        }
+
+        .patient-instructions ol {
+            padding-left: 20px;
+        }
+
+        .patient-instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI-Generated Summaries</h1>
+            <p>Review, edit, and download summaries</p>
+        </div>
+
+        <div class="transcript-section">
+            <div class="transcript-info">
+                <span class="transcript-icon">📄</span>
+                <div class="transcript-text">
+                    <h3>Original Transcript</h3>
+                    <p>Edit and regenerate summaries</p>
+                </div>
+            </div>
+            <button class="edit-btn">
+                <span>✏️</span>
+                Edit
+            </button>
+        </div>
+
+        <button class="regenerate-btn">
+            <span>🔄</span>
+            Regenerate Summaries
+        </button>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showSummary('doctor')">
+                <span>📄</span>
+                Doctor Summary
+            </button>
+            <button class="tab" onclick="showSummary('patient')">
+                <span>👤</span>
+                Patient Summary
+            </button>
+        </div>
+
+        <div class="summary-content">
+            <!-- Doctor Summary -->
+            <div id="doctor-summary" class="summary-body active">
+                <div class="summary-header">
+                    <div class="summary-title">
+                        <h2>Doctor Summary</h2>
+                        <p>Medical terminology & professional format</p>
+                    </div>
+                    <div class="summary-actions">
+                        <button class="icon-btn">✏️</button>
+                        <button class="icon-btn">⬇️</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Patient Visit Summary</h3>
+                </div>
+
+                <div class="section">
+                    <p><strong>Patient Information:</strong></p>
+                    <ul>
+                        <li>- Chief Complaint: Chest pain for 3-4 days</li>
+                        <li>- Onset: Monday (approximately 3-4 days prior to visit)</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <p><strong>History of Present Illness:</strong></p>
+                    <p>Patient reports sharp, intermittent chest pain that occurs primarily with exertion (climbing stairs, exercise). Pain duration: several minutes, resolves with rest. Associated symptoms include dyspnea during episodes. No reported dizziness or nausea.</p>
+                </div>
+
+                <div class="section">
+                    <p><strong>Family History:</strong></p>
+                    <ul>
+                        <li>- Significant for premature coronary artery disease (father - MI at age 55)</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <p><strong>Physical Examination:</strong></p>
+                    <ul>
+                        <li>- Vitals reviewed</li>
+                        <li>- Cardiovascular assessment performed</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <p><strong>Assessment & Plan:</strong></p>
+                    <p>1. Chest pain, concerning for angina given exertional pattern and positive family history</p>
+                </div>
+            </div>
+
+            <!-- Patient Summary -->
+            <div id="patient-summary" class="summary-body">
+                <div class="summary-header">
+                    <div class="summary-title">
+                        <h2>Patient Summary</h2>
+                        <p>Simple language & instructions</p>
+                    </div>
+                    <div class="summary-actions">
+                        <button class="icon-btn">✏️</button>
+                        <button class="icon-btn">⬇️</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Your Visit Summary</h3>
+                </div>
+
+                <div class="section">
+                    <p><strong>What We Discussed:</strong></p>
+                    <p>You came in today because you've been having chest pain for the past few days. You mentioned that the pain is sharp and happens mostly when you're active, like climbing stairs or exercising. The pain goes away when you rest.</p>
+                </div>
+
+                <div class="section">
+                    <p><strong>Tests Ordered:</strong></p>
+                    <ul>
+                        <li>- Heart rhythm test (ECG)</li>
+                        <li>- Blood pressure check</li>
+                        <li>- Blood tests to check your heart</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <p><strong>Medications:</strong></p>
+                    <p>Your doctor prescribed pain medication to help you feel more comfortable while we wait for test results.</p>
+                </div>
+
+                <div class="section patient-instructions">
+                    <p><strong>Important Instructions:</strong></p>
+                    <ol>
+                        <li>Avoid strenuous activities until your follow-up appointment</li>
+                        <li>Rest when you feel chest pain</li>
+                        <li>Take your prescribed medication as directed</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <button class="download-btn" onclick="downloadCurrent()">
+            <span>⬇️</span>
+            <span id="download-text">Download Doctor Summary</span>
+        </button>
+    </div>
+
+    <script>
+        let currentSummary = 'doctor';
+
+        function showSummary(type) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.closest('.tab').classList.add('active');
+
+            // Update summary content
+            document.querySelectorAll('.summary-body').forEach(body => {
+                body.classList.remove('active');
+            });
+            document.getElementById(type + '-summary').classList.add('active');
+
+            // Update download button text
+            currentSummary = type;
+            const summaryName = type.charAt(0).toUpperCase() + type.slice(1);
+            document.getElementById('download-text').textContent = `Download ${summaryName} Summary`;
+        }
+
+        function downloadCurrent() {
+            alert(`Downloading ${currentSummary} summary...`);
+        }
+    </script>
+</body>
+</html>
