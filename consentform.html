@@ -174,5 +174,119 @@
         .proceed-button.enabled:active {
             transform: scale(0.98);
         }
-
     </style>
+    </head>
+<body>
+    <div class="container">
+        <h1>Recording Consent</h1>
+        
+        <div class="form-card">
+            <div class="privacy-notice">
+                <div class="privacy-notice-icon">🛡️</div>
+                <div class="privacy-notice-content">
+                    <h2>Privacy Notice</h2>
+                    <p>Audio is deleted after each session. The conversation is only used to generate medical documentation and is not stored permanently.</p>
+                </div>
+            </div>
+
+            <div class="consent-box" id="doctorBox">
+                <div class="consent-header">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="doctorConsent">
+                    </div>
+                    <div class="consent-text">
+                        <h3>Doctor Consent</h3>
+                        <p>I consent to having this medical consultation recorded for documentation purposes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="consent-box" id="patientBox">
+                <div class="consent-header">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="patientConsent">
+                    </div>
+                    <div class="consent-text">
+                        <h3>Patient Consent</h3>
+                        <p>The patient has been informed and consents to this consultation being recorded.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="how-it-works">
+                <h3>How it works:</h3>
+                <ul>
+                    <li>Audio is processed in real-time to create a transcript</li>
+                    <li>AI generates professional medical summaries</li>
+                    <li>All audio data is permanently deleted after processing</li>
+                </ul>
+            </div>
+
+            <button class="proceed-button" id="proceedButton" disabled>
+                Consent Required to Proceed
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const doctorCheckbox = document.getElementById('doctorConsent');
+        const patientCheckbox = document.getElementById('patientConsent');
+        const doctorBox = document.getElementById('doctorBox');
+        const patientBox = document.getElementById('patientBox');
+        const proceedButton = document.getElementById('proceedButton');
+
+        function updateButton() {
+            if (doctorCheckbox.checked && patientCheckbox.checked) {
+                proceedButton.classList.add('enabled');
+                proceedButton.disabled = false;
+                proceedButton.textContent = 'Proceed';
+            } else {
+                proceedButton.classList.remove('enabled');
+                proceedButton.disabled = true;
+                proceedButton.textContent = 'Consent Required to Proceed';
+            }
+        }
+
+        function updateBoxStyle(box, checkbox) {
+            if (checkbox.checked) {
+                box.classList.add('checked');
+            } else {
+                box.classList.remove('checked');
+            }
+        }
+
+        doctorCheckbox.addEventListener('change', function() {
+            updateBoxStyle(doctorBox, doctorCheckbox);
+            updateButton();
+        });
+
+        patientCheckbox.addEventListener('change', function() {
+            updateBoxStyle(patientBox, patientCheckbox);
+            updateButton();
+        });
+
+        doctorBox.addEventListener('click', function(e) {
+            if (e.target !== doctorCheckbox) {
+                doctorCheckbox.checked = !doctorCheckbox.checked;
+                updateBoxStyle(doctorBox, doctorCheckbox);
+                updateButton();
+            }
+        });
+
+        patientBox.addEventListener('click', function(e) {
+            if (e.target !== patientCheckbox) {
+                patientCheckbox.checked = !patientCheckbox.checked;
+                updateBoxStyle(patientBox, patientCheckbox);
+                updateButton();
+            }
+        });
+
+        proceedButton.addEventListener('click', function() {
+            if (this.classList.contains('enabled')) {
+                alert('Proceeding with recording...');
+                // Add your proceed logic here
+            }
+        });
+    </script>
+</body>
+</html>
