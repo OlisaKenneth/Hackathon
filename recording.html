@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Visit Recording</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f0f5 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .microphone-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .mic-outer-ring {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(100, 150, 230, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .mic-outer-ring.recording {
+            animation: pulse-recording 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes pulse-recording {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(100, 150, 230, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(100, 150, 230, 0);
+            }
+        }
+
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6496e6 0%, #5a7fd8 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(100, 150, 230, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(100, 150, 230, 0.5);
+        }
+
+        .mic-button:active {
+            transform: scale(0.98);
+        }
+
+        .mic-icon {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: 300;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .instruction {
+            font-size: 15px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        .transcript-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+            min-height: 120px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .transcript-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6496e6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .transcript-line {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .speaker {
+            font-weight: 600;
+            color: #0066cc;
+            margin-right: 4px;
+        }
+
+        .speaker.patient {
+            color: #2d8659;
+        }
+
+        .message {
+            color: #444;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            border-color: #ccc;
+            background: #fafafa;
+        }
+
+        .control-btn.stop {
+            background: #ff4444;
+            color: white;
+            border-color: #ff4444;
+        }
+
+        .control-btn.stop:hover {
+            background: #e63939;
+            border-color: #e63939;
+        }
+
+        .control-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    </head>
+<body>
+    <div class="header">
+        <h1>Patient Visit Recording</h1>
+    </div>
+
+    <div class="container">
+        <div class="microphone-container">
+            <div class="mic-outer-ring" id="micRing">
+                <button class="mic-button" id="micButton">
+                    <svg class="mic-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15C13.66 15 15 13.66 15 12V6C15 4.34 13.66 3 12 3C10.34 3 9 4.34 9 6V12C9 13.66 10.34 15 12 15Z" fill="white"/>
+                        <path d="M17 12C17 14.76 14.76 17 12 17C9.24 17 7 14.76 7 12H5C5 15.53 7.61 18.43 11 18.92V22H13V18.92C16.39 18.43 19 15.53 19 12H17Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="status-badge" id="statusBadge">
+            <span class="recording-dot hidden" id="recordingDot"></span>
+            <span id="statusText">Ready to record</span>
+        </div>
+
+        <div class="timer" id="timer">00:00</div>
+        <div class="instruction">Speak naturally with your patient</div>
+
+        <div class="transcript-container">
+            <div class="transcript-header">Live Transcript</div>
+            <div id="transcript">
+                <div class="transcript-line" style="color: #999; font-style: italic;">
+                    Transcript will appear here when recording starts...
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn disabled" id="pauseBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/>
+                    <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/>
+                </svg>
+                Pause
+            </button>
+            <button class="control-btn stop disabled" id="stopBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor"/>
+                </svg>
+                Stop Recording
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let isPaused = false;
+        let seconds = 0;
+        let timerInterval;
+        let recognition;
+
+        const micButton = document.getElementById('micButton');
+        const micRing = document.getElementById('micRing');
+        const statusBadge = document.getElementById('statusBadge');
+        const statusText = document.getElementById('statusText');
+        const recordingDot = document.getElementById('recordingDot');
+        const timer = document.getElementById('timer');
+        const transcript = document.getElementById('transcript');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        // Initialize Web Speech API
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            let finalTranscript = '';
+            let currentSpeaker = 'Doctor';
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcriptText = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcriptText + ' ';
+                        addTranscriptLine(currentSpeaker, transcriptText);
+                        // Alternate speaker for demo purposes
+                        currentSpeaker = currentSpeaker === 'Doctor' ? 'Patient' : 'Doctor';
+                    } else {
+                        interimTranscript += transcriptText;
+                    }
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+            };
+        }
+
+        function addTranscriptLine(speaker, text) {
+            if (transcript.querySelector('.transcript-line[style*="color: #999"]')) {
+                transcript.innerHTML = '';
+            }
+
+            const line = document.createElement('div');
+            line.className = 'transcript-line';
+            line.innerHTML = `<span class="speaker ${speaker.toLowerCase()}">${speaker}:</span><span class="message">${text}</span>`;
+            transcript.appendChild(line);
+            transcript.scrollTop = transcript.scrollHeight;
+        }
+
+        function formatTime(secs) {
+            const minutes = Math.floor(secs / 60);
+            const remainingSeconds = secs % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    seconds++;
+                    timer.textContent = formatTime(seconds);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            seconds = 0;
+            timer.textContent = '00:00';
+        }
+
+        micButton.addEventListener('click', () => {
+            if (!isRecording) {
+                startRecording();
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            if (isRecording && !pauseBtn.classList.contains('disabled')) {
+                togglePause();
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (isRecording && !stopBtn.classList.contains('disabled')) {
+                stopRecording();
+            }
+        });
+
+        function startRecording() {
+            isRecording = true;
+            micRing.classList.add('recording');
+            recordingDot.classList.remove('hidden');
+            statusText.textContent = 'Recording...';
+            pauseBtn.classList.remove('disabled');
+            stopBtn.classList.remove('disabled');
+            
+            startTimer();
+            
+            if (recognition) {
+                recognition.start();
+            } else {
+                // Simulate transcript for browsers without speech recognition
+                simulateTranscript();
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            if (isPaused) {
+                statusText.textContent = 'Paused';
+                micRing.classList.remove('recording');
+                pauseBtn.textContent = 'Resume';
+                if (recognition) {
+                    recognition.stop();
+                }
+            } else {
+                statusText.textContent = 'Recording...';
+                micRing.classList.add('recording');
+                pauseBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor"/>
+                    <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor"/>
+                </svg>Pause`;
+                if (recognition) {
+                    recognition.start();
+                }
+            }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            isPaused = false;
+            micRing.classList.remove('recording');
+            recordingDot.classList.add('hidden');
+            statusText.textContent = 'Recording complete';
+            pauseBtn.classList.add('disabled');
+            stopBtn.classList.add('disabled');
+            
+            stopTimer();
+            
+            if (recognition) {
+                recognition.stop();
+            }
+
+            setTimeout(() => {
+                statusText.textContent = 'Ready to record';
+            }, 2000);
+        }
+
+        // Simulate transcript for demo purposes (if speech recognition not available)
+        function simulateTranscript() {
+            const demoLines = [
+                { speaker: 'Doctor', text: 'Good morning. How are you feeling today?' },
+                { speaker: 'Patient', text: "I've been having some chest pain for the past few days..." },
+                { speaker: 'Doctor', text: 'Can you describe the pain? Is it sharp or dull?' },
+                { speaker: 'Patient', text: "It's more of a dull ache, especially when I breathe deeply." }
+            ];
+
+            let lineIndex = 0;
+            const interval = setInterval(() => {
+                if (!isRecording || isPaused || lineIndex >= demoLines.length) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                const line = demoLines[lineIndex];
+                addTranscriptLine(line.speaker, line.text);
+                lineIndex++;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
