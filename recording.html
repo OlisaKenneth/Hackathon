@@ -433,24 +433,24 @@
         }
 
         function stopRecording() {
-            isRecording = false;
-            isPaused = false;
-            micRing.classList.remove('recording');
-            recordingDot.classList.add('hidden');
-            statusText.textContent = 'Recording complete';
-            pauseBtn.classList.add('disabled');
-            stopBtn.classList.add('disabled');
-            
-            stopTimer();
-            
-            if (recognition) {
-                recognition.stop();
-            }
+    isRecording = false;
+    isPaused = false;
+    micRing.classList.remove('recording');
+    recordingDot.classList.add('hidden');
+    statusText.textContent = 'Recording complete';
+    pauseBtn.classList.add('disabled');
+    stopBtn.classList.add('disabled');
+    
+    stopTimer();
+    
+    if (recognition) {
+        recognition.stop();
+    }
 
-            setTimeout(() => {
-                statusText.textContent = 'Ready to record';
-            }, 2000);
-        }
+    setTimeout(() => {
+        statusText.textContent = 'Ready to record';
+    }, 2000);
+}
 
         // Simulate transcript for demo purposes (if speech recognition not available)
         function simulateTranscript() {
