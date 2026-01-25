@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SumData AI - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+        }
+
+        header {
+            background: white;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-logo { display: flex; align-items: center; gap: 12px; }
+        .mini-logo {
+            background: var(--primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Smaller version of medical cross */
+        .cross-small { background: white; width: 14px; height: 4px; border-radius: 1px; position: relative; }
+        .cross-small::after { content:""; position: absolute; background: white; width: 4px; height: 14px; left: 5px; top: -5px; border-radius: 1px; }
+
+        .profile-circle { width: 36px; height: 36px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: bold; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+
+        .upload-box {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-visit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            margin-bottom: 40px;
+        }
+
+        .visit-card {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        .completed { background: #dcfce7; color: #166534; }
+        .draft { background: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <div class="mini-logo"><div class="cross-small"></div></div>
+            <div>
+                <div style="font-weight: 800; font-size: 18px;">SumData AI</div>
+                <div style="font-size: 12px; color: #64748b;">Dr. Anderson</div>
+            </div>
+        </div>
+        <div class="profile-circle">A</div>
+    </header>
+
+    <div class="container">
+        <div class="upload-box">
+            <div>
+                <div style="font-weight: 600; font-size: 16px;">Upload Template PDF</div>
+                <div style="color: #64748b; font-size: 14px;">Fill medical forms automatically</div>
+            </div>
+            <button style="background: white; border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">Choose File</button>
+        </div>
+
+        <button class="btn-visit">+ Start New Patient Visit</button>
+
+        <h3 style="margin-bottom: 20px;">Recent Documentation</h3>
+
+        <div class="visit-card">
+            <div style="margin-right: 15px; font-size: 24px;">📄</div>
+            <div>
+                <div style="font-weight: 600;">John Smith</div>
+                <div style="font-size: 13px; color: #64748b;">Jan 24, 2026 • 10:30 AM</div>
+            </div>
+            <span class="badge completed">COMPLETED</span>
+        </div>
+
+        <div class="visit-card">
+            <div style="margin-right: 15px; font-size: 24px;">📄</div>
+            <div>
+                <div style="font-weight: 600;">Michael Brown</div>
+                <div style="font-size: 13px; color: #64748b;">Jan 23, 2026 • 11:00 AM</div>
+            </div>
+            <span class="badge draft">DRAFT</span>
+        </div>
+    </div>
+
+</body>
+</html>
