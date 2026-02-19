@@ -311,6 +311,8 @@
 
                 <div class="section">
                     <h3>Patient Visit Summary</h3>
+                    <pre id="doctorOutput" style="white-space: pre-wrap;"></pre>
+
                 </div>
 
                 <div class="section">
@@ -362,6 +364,8 @@
 
                 <div class="section">
                     <h3>Your Visit Summary</h3>
+                    <pre id="patientOutput" style="white-space: pre-wrap;"></pre>
+
                 </div>
 
                 <div class="section">
@@ -425,6 +429,15 @@
         function downloadCurrent() {
             alert(`Downloading ${currentSummary} summary...`);
         }
+
+        (function loadSummaries() {
+  document.getElementById("doctorOutput").textContent =
+    localStorage.getItem("sumdata_doctor_summary") || "";
+
+  document.getElementById("patientOutput").textContent =
+    localStorage.getItem("sumdata_patient_summary") || "";
+})();
+
     </script>
 </body>
 </html>

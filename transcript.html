@@ -371,6 +371,59 @@
         document.querySelector('.help-button').addEventListener('click', () => {
             alert('Need help?\n\n• Click "Edit" to modify the transcript\n• Click on any line to edit the text\n• Click "Done" when finished editing\n• Click "Generate Summaries" to create AI summaries');
         });
+
+        const API_BASE = "http://localhost:8000";
+
+// Load transcript saved from recording page
+(function loadTranscript() {
+  const saved = localStorage.getItem("sumdata_transcript");
+  if (!saved) return;
+
+  transcriptContent.innerHTML = "";
+  saved.split("\n").forEach(line => {
+    const parts = line.split(":");
+    const speaker = parts[0] || "Speaker";
+    const message = parts.slice(1).join(":");
+
+    const div = document.createElement("div");
+    div.className = "transcript-line";
+    div.innerHTML = `
+      <span class="speaker">${speaker}:</span>
+      <span class="message">${message}</span>
+    `;
+    transcriptContent.appendChild(div);
+  });
+})();
+
+// Replace generate button logic
+generateBtn.addEventListener("click", async () => {
+  const transcriptLines = document.querySelectorAll(".transcript-line");
+  const transcript = Array.from(transcriptLines)
+    .map(line => `${line.querySelector('.speaker').textContent} ${line.querySelector('.message').textContent}`)
+    .join("\n");
+
+  if (transcript.length < 20) {
+    alert("Transcript too short.");
+    return;
+  }
+
+  generateBtn.textContent = "Generating...";
+  generateBtn.disabled = true;
+
+  const res = await fetch(`${API_BASE}/generate`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ transcript })
+  });
+
+  const data = await res.json();
+
+  localStorage.setItem("sumdata_doctor_summary", data.clinician_note || "");
+  localStorage.setItem("sumdata_patient_summary", data.patient_summary || "");
+
+  window.location.href = "download.html";
+});
+
     </script>
 </body>
 </html>

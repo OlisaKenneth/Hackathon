@@ -281,12 +281,14 @@
             }
         });
 
-        proceedButton.addEventListener('click', function() {
+      proceedButton.addEventListener('click', function () {
             if (this.classList.contains('enabled')) {
-                alert('Proceeding with recording...');
-                // Add your proceed logic here
+                localStorage.setItem("sumdata_doctor_consent", "true");
+                localStorage.setItem("sumdata_patient_consent", "true");
+                window.location.href = "recording.html";
             }
-        });
+    });
+
     </script>
 </body>
 </html>

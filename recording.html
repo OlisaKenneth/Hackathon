@@ -432,25 +432,34 @@
             }
         }
 
-        function stopRecording() {
-    isRecording = false;
-    isPaused = false;
-    micRing.classList.remove('recording');
-    recordingDot.classList.add('hidden');
-    statusText.textContent = 'Recording complete';
-    pauseBtn.classList.add('disabled');
-    stopBtn.classList.add('disabled');
-    
-    stopTimer();
-    
-    if (recognition) {
-        recognition.stop();
-    }
+function stopRecording() {
+  isRecording = false;
+  isPaused = false;
+  micRing.classList.remove('recording');
+  recordingDot.classList.add('hidden');
+  statusText.textContent = 'Recording complete';
+  pauseBtn.classList.add('disabled');
+  stopBtn.classList.add('disabled');
 
-    setTimeout(() => {
-        statusText.textContent = 'Ready to record';
-    }, 2000);
+  stopTimer();
+
+  if (recognition) recognition.stop();
+
+  // 🔹 Build transcript text
+  const lines = document.querySelectorAll('#transcript .transcript-line');
+  const out = [];
+  lines.forEach(line => {
+    const speaker = line.querySelector('.speaker')?.textContent.replace(':','').trim();
+    const msg = line.querySelector('.message')?.textContent.trim();
+    if (speaker && msg) out.push(`${speaker}: ${msg}`);
+  });
+
+  localStorage.setItem("sumdata_transcript", out.join("\n"));
+
+  // 🔹 Go to transcript review page
+  window.location.href = "transcript.html";
 }
+
 
         // Simulate transcript for demo purposes (if speech recognition not available)
         function simulateTranscript() {

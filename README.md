@@ -1,4 +1,5 @@
 # SumData — Offline-First Clinical Documentation Assistant
+https://www.canva.com/design/DAG_YdvqUlk/8sjBUIQBQm6lJBBC7u09Bw/view?utm_content=DAG_YdvqUlk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hb5668107e0
 
 SumData is a privacy-first, AI-assisted clinical documentation prototype designed to reduce administrative burden on healthcare providers while improving patient understanding. The system captures doctor–patient conversations (with explicit consent), generates structured medical documentation for clinicians, and produces clear, patient-friendly summaries — all with a strict doctor-in-the-loop workflow.
 
